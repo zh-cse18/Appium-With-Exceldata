@@ -1,0 +1,84 @@
+package utilitis;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.remote.DesiredCapabilities;
+import io.appium.java_client.remote.MobileCapabilityType;
+import io.appium.java_client.android.AndroidDriver;
+import java.net.MalformedURLException;
+import java.net.URL;
+
+public class AppiumTesting {
+
+	static int rowCount=0;
+	static String place;
+	static String name;
+	static String mobileNumber;
+	
+	public static void main(String[] args) throws MalformedURLException, InterruptedException  {
+		//call Row count method
+		getRowCount();
+		
+		
+		DesiredCapabilities dc = new DesiredCapabilities();
+		dc.setCapability(MobileCapabilityType.AUTOMATION_NAME, "Appium");
+		dc.setCapability(MobileCapabilityType.PLATFORM_NAME,"Android");
+		dc.setCapability(MobileCapabilityType.PLATFORM_VERSION, "9");
+		dc.setCapability(MobileCapabilityType.DEVICE_NAME, "Android");
+		dc.setCapability(MobileCapabilityType.APP, "E:\\chaldal.apk");
+
+		URL url = new URL("http://127.0.0.1:4723/wd/hub");
+		AndroidDriver<WebElement> driver = new AndroidDriver<WebElement>(url,dc);
+
+		Thread.sleep(15000);
+
+		WebElement menu = driver.findElementByXPath("hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.support.v4.widget.l/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup[2]/android.view.ViewGroup/android.widget.TextView\r\n");
+		menu.click();
+		Thread.sleep(10000);
+
+		WebElement loginMenu = driver.findElementByXPath("hierarchy/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.LinearLayout/android.widget.FrameLayout/android.widget.FrameLayout/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.support.v4.widget.l/android.view.ViewGroup[1]/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup/android.view.ViewGroup[2]/android.widget.ScrollView/android.view.ViewGroup/android.view.ViewGroup[1]/android.view.ViewGroup/android.widget.TextView[1]\r\n");
+		loginMenu.click();
+
+		Thread.sleep(10000);
+		driver.findElement(By.xpath("//android.widget.EditText[@bounds='[83,552][998,690]']")).sendKeys(mobileNumber);
+
+	}
+
+	//start get Count Row
+	public static void getRowCount() {
+
+		try {
+			String excelPath ="./data/datasheet.xlsx";
+			XSSFWorkbook workbook = new XSSFWorkbook(excelPath);
+			XSSFSheet sheet = workbook.getSheet("Sheet1");
+			rowCount = sheet.getPhysicalNumberOfRows();
+			System.out.println( " total row is =" + rowCount);
+
+			for(int i=1; i < rowCount;i++)
+			{
+				String name = sheet.getRow(i).getCell(0).getStringCellValue();
+				place = sheet.getRow(i).getCell(1).getStringCellValue();
+			    mobileNumber = sheet.getRow(i).getCell(2).getStringCellValue();
+				System.out.println( "My name is " + name + " I live in " + place + " mobile number is " +  mobileNumber) ;
+
+			}
+
+
+		}catch(Exception ex) {
+			System.out.println(ex.getCause());
+			System.out.println(ex.getMessage());			
+		}
+
+	}
+
+
+
+
+}
+
+
+
+
+
+
